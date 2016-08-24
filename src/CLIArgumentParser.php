@@ -13,6 +13,7 @@ class CLIArgumentParser {
      */
     private $config;
     private $errors;
+    private $isValid = false;
 
     public function __construct($cliArgs) {
         $this->errors = [];
@@ -66,6 +67,10 @@ class CLIArgumentParser {
             . "is not readable";
         }
         return empty($this->errors);
+    }
+
+    public function getIsValid() {
+        return $this->isValid;
     }
 
 }
