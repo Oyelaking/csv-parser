@@ -47,6 +47,7 @@ class CSVParser {
                 $this->errors[] = $formatter->getErrorMessage();
                 return FALSE;
             }
+            $list[] = $formattedRow;
         }
         return $list;
     }

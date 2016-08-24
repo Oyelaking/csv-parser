@@ -28,9 +28,28 @@ class CLIArgumentParser {
         }
         if ($this->validate($params)) {
             //initialize the config object
+            $this->initConfig();
         }
     }
 
+    protected function initConfig($params) {
+        $config = new Config();
+        if(!empty($params['csvFile'])){
+            $config->setCsvFile($params['csvFile']);
+        }
+        if(!empty($params['outputCSVFile'])){
+            $config->setOutputCSVFile($params['outputCSVFile']);
+        }
+        if(!empty($params['configFile'])){
+            $config->setConfigFile($params['configFile']);
+        }
+        $this->config = $config;
+    }
+
+    /**
+     * 
+     * @return Config
+     */
     public function getConfig() {
         return $this->config;
     }
@@ -48,23 +67,23 @@ class CLIArgumentParser {
      * 
      */
     public function validate($cmdParams) {
-        if (empty($cmdParams['configFile'])) {
-            $this->errors[] = "The CLI argument --configFile is required";
-        }elseif (!file_exists($cmdParams['configFile'])) {
-            $this->errors[] = "The config file {$cmdParams['configFile']} "
-            . "does not exist or could not be found";
-        }elseif(!is_readable($cmdParams['configFile'])){
-            $this->errors[] = "The config file {$cmdParams['configFile']} "
-            . "is not readable";
-        }
-        if(empty($cmdParams['csvFile'])){
+//        if (empty($cmdParams['configFile'])) {
+//            $this->errors[] = "The CLI argument --configFile is required";
+//        } elseif (!file_exists($cmdParams['configFile'])) {
+//            $this->errors[] = "The config file {$cmdParams['configFile']} "
+//                    . "does not exist or could not be found";
+//        } elseif (!is_readable($cmdParams['configFile'])) {
+//            $this->errors[] = "The config file {$cmdParams['configFile']} "
+//                    . "is not readable";
+//        }
+        if (empty($cmdParams['csvFile'])) {
             $this->errors[] = "The CLI argument --csvFile is required";
-        }elseif (!file_exists($cmdParams['csvFile'])) {
+        } elseif (!file_exists($cmdParams['csvFile'])) {
             $this->errors[] = "The CSV file {$cmdParams['csvFile']} "
-            . "does not exist or could not be found";
-        }elseif(!is_readable($cmdParams['csvFile'])){
+                    . "does not exist or could not be found";
+        } elseif (!is_readable($cmdParams['csvFile'])) {
             $this->errors[] = "The CSV file {$cmdParams['csvFile']} "
-            . "is not readable";
+                    . "is not readable";
         }
         return empty($this->errors);
     }

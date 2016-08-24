@@ -44,7 +44,7 @@ class ParserConfig {
      * @param type $object
      */
     public function setObject($object) {
-        if (!empty($object) && is_object($object)) {
+        if (empty($object) || !is_object($object)) {
             return false;
         }
         $this->analyzeObject($object);

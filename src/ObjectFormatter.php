@@ -9,7 +9,7 @@ class ObjectFormatter implements Formatter {
 
     private $errorMessage = "";
 
-    public function formatRow($row, ParserConfig $config) {
+    public function formatRow(array $row, ParserConfig $config) {
         if (!is_object($row) && !is_array($row)) {
             $this->errorMessage = "Invalid row type. Row should either "
                     . "be an array or object";
@@ -20,9 +20,9 @@ class ObjectFormatter implements Formatter {
             return FALSE;
         }
         if (is_object($row)) {
-            return $this->formatObject($row);
+            return $this->formatObject($row, $config->getKeys());
         } else {
-            return $this->formatArray($row);
+            return $this->formatArray($row, $config->getKeys());
         }
     }
 
@@ -31,12 +31,13 @@ class ObjectFormatter implements Formatter {
         //create a reflector
         $reflector = new ReflectionClass($obj);
         foreach ($propertyNames as $name) {
-            $property = $reflector->getProperty($name);
-            if (empty($property)) {
+            $hasProperty = $reflector->hasProperty($name);
+            if (!$hasProperty) {
                 $this->errorMessage = "The property $name does not exist in"
                         . " the object of type" . $reflector->getName();
                 return FALSE;
             }
+            $property = $reflector->getProperty($name);
             if ($property->isPublic()) {
                 $data[] = $property->getValue();
             } else {
@@ -51,6 +52,7 @@ class ObjectFormatter implements Formatter {
                 $data[] = $method->invoke($obj);
             }
         }
+        return $data;
     }
 
     protected function formatArray($array, array $arrayKeys) {

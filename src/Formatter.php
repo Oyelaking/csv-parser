@@ -7,7 +7,7 @@
  */
 interface Formatter {
    
-    public function formatRow($row, ParserConfig $config);
+    public function formatRow(array $row, ParserConfig $config);
     public function getErrorMessage();
     
 }

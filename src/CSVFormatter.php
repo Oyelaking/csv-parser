@@ -40,15 +40,15 @@ class CSVFormatter implements Formatter {
         $type = $this->getHeaderType($cleanHeaders[0]);
         switch ($type) {
             case self::HEADER_TYPE_INDEXED:
-                $this->createIndexedArray($row, $cleanHeaders);
+                $data = $this->createIndexedArray($row, $cleanHeaders);
                 break;
 
             case self::HEADER_TYPE_OBJECT:
-                $this->createObject($row, $cleanHeaders);
+                $data = $this->createObject($row, $cleanHeaders);
                 break;
 
             case self::HEADER_TYPE_ASSOC:
-                $this->createAssocArray($row, $cleanHeaders);
+                $data = $this->createAssocArray($row, $cleanHeaders);
             default:
                 break;
         }
@@ -66,7 +66,8 @@ class CSVFormatter implements Formatter {
             foreach ($headers as $header) {
                 $counter++;
                 $propertyName = explode(":", $header)[1];
-                $property = $reflector->getProperty($propertyName);
+                $property = $reflector->hasProperty($propertyName) 
+                        ? $reflector->getProperty($propertyName) : null;
                 if (empty($property)) {
                     $this->errorMessage = "The property $propertyName does not exist in"
                             . " the object of type" . $reflector->getName();
@@ -112,13 +113,12 @@ class CSVFormatter implements Formatter {
     }
 
     protected function getHeaderType($header) {
-        $type = self::HEADER_TYPE_ASSOC;
-        ;
+        $type = self::HEADER_TYPE_ASSOC;        
         if (strpos($header, ":")) {
             $headerSplitted = explode(":", $header);
             if (is_numeric($headerSplitted[1])) {
                 return self::HEADER_TYPE_INDEXED;
-            } elseif (class_exists($header[1])) {
+            } elseif (class_exists($headerSplitted[0])) {
                 return self::HEADER_TYPE_OBJECT;
             }
         }

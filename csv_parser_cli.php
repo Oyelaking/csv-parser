@@ -42,6 +42,23 @@ if(!$argParser->getIsValid()){
     exit();
 }
 
+$parserConfig = new ParserConfig();
+$config = $argParser->getConfig();
+
+$parser = new CSVParser($parserConfig);
+
+$objectList = $parser->parseCSV($config);
+
+if(!empty($objectList)){
+    echo "CSV file successfully parsed to object.\n\n";
+    print_r($objectList, false);
+}else{
+    echo "Failed to parse CSV file to object. Errors: \n";
+    $errors = $parser->getErrors();
+    foreach ($errors as $error) {
+        echo $error;
+    }
+}
 
 
 function print_line($message){
