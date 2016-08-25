@@ -15,20 +15,21 @@ class CLIArgumentParser {
     private $errors;
     private $isValid = false;
 
-    public function __construct($cliArgs) {
+    public function __construct(array $cliArgs) {
         $this->errors = [];
-        $this->parseCliParams($cliArgs);
+        $this->parseCliParams(array_combine(range(0, count($cliArgs) - 1), $cliArgs));
     }
 
     protected function parseCliParams($cliArgs) {
         $params = [];
-        for ($i = 1; $i < count($cliArgs); $i++) {
+        for ($i = 0; $i < count($cliArgs); $i++) {
             $val = explode("=", ltrim($cliArgs[$i], '-'));
             $params[$val[0]] = $val[1];
         }
         if ($this->validate($params)) {
+            $this->isValid = true;
             //initialize the config object
-            $this->initConfig();
+            $this->initConfig($params);
         }
     }
 

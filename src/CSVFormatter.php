@@ -106,7 +106,7 @@ class CSVFormatter implements Formatter {
         $array = [];
         $counter = 0;
         foreach ($headers as $header) {
-            $row[$header] = !empty($row[$counter]) ? $row[$counter] : "";
+            $array[$header] = !empty($row[$counter]) ? $row[$counter] : "";
             $counter++;
         }
         return $array;

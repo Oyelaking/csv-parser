@@ -15,7 +15,7 @@ if($argc < 1){
 }
 
 //check that it's this file in particular that's being run
-if(!preg_match("//", $argc[0])){
+if(!preg_match("/csv_parser_cli.php/", $argv[0])){
     print_line("To use this application from another application, include"
             . " csv_parser.php instead.");
     exit();
